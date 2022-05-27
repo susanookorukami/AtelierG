@@ -4,21 +4,35 @@ import csv
 import time
 
 class Pizza:
-  
-  def __init__(self, name, base, ingredients):
+  def __init__(self, name=None, base="", ingredients=[]):
     self.name = name
     self.base = base
     self.ingredients = ingredients
     self.state = False
     
-  def create_pizza(self):
+  def get_all(self):
+    self.data = {'Hawaienne': [], 'Rucola': [], 'Poulet': []}
+
+    with open('pizza.csv', 'r') as file:
+      csv_file = csv.DictReader(file)
+      for v in csv_file:
+        self.data['Hawaienne'].append(v['Hawaienne'])
+        self.data['Rucola'].append(v['Rucola'])
+        self.data['Poulet'].append(v['Poulet'])
+
+    return self.data
+  
+  def create(self):
     pass
   
   def is_done(self):
     pass
 
+  def check(self):
+    pass
+
 class PizzaGui(tk.Frame):
-  def __init__(self, parent, game_time_sec=5, bg="white", *args, **kwargs):
+  def __init__(self, parent, game_time_sec=20, bg="white", *args, **kwargs):
     tk.Frame.__init__(self, parent, bg=bg, *args, **kwargs)
     
     self.parent = parent
@@ -26,6 +40,7 @@ class PizzaGui(tk.Frame):
     self.width  = 642 #1252
     self.height = 600
     self.game_time_sec = game_time_sec
+    self.pizza = Pizza()
     
     self.parent.geometry(f'{self.width}x{self.height}')
 
@@ -63,20 +78,25 @@ class PizzaGui(tk.Frame):
     self.var_status_info = tk.StringVar()
     self.var_status_info.set("Aucune" + self.info)
 
-    self.data = {'Hawaienne': [], 'Rucola': [], 'Poulet': []}
+    self.var1 = tk.StringVar()
+    self.var2 = tk.StringVar()
+    self.var3 = tk.StringVar()
+    self.var4 = tk.StringVar()
+    self.var5 = tk.StringVar()
+    self.var6 = tk.StringVar()
+    self.var7 = tk.StringVar()
+    self.var8 = tk.StringVar()
+    self.var9 = tk.StringVar()
 
-    with open('pizza.csv', 'r') as file:
-      csv_file = csv.DictReader(file)
-      for v in csv_file:
-        self.data['Hawaienne'].append(v['Hawaienne'])
-        self.data['Rucola'].append(v['Rucola'])
-        self.data['Poulet'].append(v['Poulet'])
+    self.tmp_pizza = []
 
-    #print(self.data)
+    self.pizza_dict = self.pizza.get_all()
 
-    self.mbttn1 = tk.Menubutton(self, text=list(self.data.keys())[0], relief=tk.RAISED)
-    self.mbttn2 = tk.Menubutton(self, text=list(self.data.keys())[1], relief=tk.RAISED)
-    self.mbttn3 = tk.Menubutton(self, text=list(self.data.keys())[2], relief=tk.RAISED)
+    #print(self.pizza_dict)
+
+    self.mbttn1 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[0], relief=tk.RAISED)
+    self.mbttn2 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[1], relief=tk.RAISED)
+    self.mbttn3 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[2], relief=tk.RAISED)
 
     self.menu1 = tk.Menu(self.mbttn1, tearoff=0)
     self.menu2 = tk.Menu(self.mbttn2, tearoff=0)
@@ -99,42 +119,42 @@ class PizzaGui(tk.Frame):
     
     self.cbtn1 = tk.Checkbutton(self, text="Base tomate", variable=self.check1,
                                     borderwidth=3, height=2, highlightthickness=5,
-                                    highlightbackground=self.bg, bg=self.bg)
+                                    highlightbackground=self.bg, bg=self.bg, command=self.onclick1)
     self.cbtn2 = tk.Checkbutton(self, text="Base blanche", variable=self.check2,
                                     borderwidth=3, height=2, highlightthickness=5,
-                                    highlightbackground=self.bg, bg=self.bg)
+                                    highlightbackground=self.bg, bg=self.bg, command=self.onclick2)
     self.cbtn3 = tk.Checkbutton(self, text="Base orange", variable=self.check3, 
                                     borderwidth=3, height=2, highlightthickness=5,
-                                    highlightbackground=self.bg, bg=self.bg)
+                                    highlightbackground=self.bg, bg=self.bg, command=self.onclick3)
 
     self.lab_btn4 = tk.Label(self, textvariable=self.counter4,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn4 = tk.Button(self, text="Morceau d'ananas", command=self.on_click4,
+    self.btn4 = tk.Button(self, text="Morceau d'ananas", command=self.onclick4,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn5 = tk.Label(self, textvariable=self.counter5,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn5 = tk.Button(self, text="Morceau de jambon", command=self.on_click5,
+    self.btn5 = tk.Button(self, text="Morceau de jambon", command=self.onclick5,
                                     highlightbackground=self.bg, bg=self.bg)
     
     self.lab_btn6 = tk.Label(self, textvariable=self.counter6,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn6 = tk.Button(self, text="Lamelle de roquette", command=self.on_click6,
+    self.btn6 = tk.Button(self, text="Lamelle de roquette", command=self.onclick6,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn7 = tk.Label(self, textvariable=self.counter7,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn7 = tk.Button(self, text="Oignon", command=self.on_click7,
+    self.btn7 = tk.Button(self, text="Oignon", command=self.onclick7,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn8 = tk.Label(self, textvariable=self.counter8,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn8 = tk.Button(self, text="Piment vert", command=self.on_click8,
+    self.btn8 = tk.Button(self, text="Piment vert", command=self.onclick8,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn9 = tk.Label(self, textvariable=self.counter9,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn9 = tk.Button(self, text="Épinard", command=self.on_click9,
+    self.btn9 = tk.Button(self, text="Épinard", command=self.onclick9,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_timer = tk.Label(self, textvariable=self.timer, borderwidth=3,
@@ -175,28 +195,75 @@ class PizzaGui(tk.Frame):
 
     self.show_frame()
     self.countdown()
-    #self.btn_send_pizza['state'] = tk.DISABLED
-    #self.btn_start['state'] = tk.DISABLED
-    #self.cbtn1.bind("<Button-1>", self.on_click_btn)
-    #self.cbtn2.bind("<Button-1>", self.on_click_btn)
-    #self.cbtn3.bind("<Button-1>", self.on_click_btn)
-    #self.btn_send_pizza.bind("<Button-1>", self.on_click_btn)
+    self.change_all_last6_btn_state(normal=False)
+    #self.cbtn1.bind("<Button-1>", self.onclick)
+    #self.cbtn2.bind("<Button-1>", self.onclick)
 
-  def on_click_btn(self, event):
-    print(self.check1.get(), self.check2.get(), self.check3.get())
-    #if self.check1.get() or self.check2.get() or self.check3.get():
-    #  self.btn_send_pizza['state'] = tk.DISABLED
-    #  print("Clicked")
-    #else:
-    #  self.btn_send_pizza['state'] = tk.NORMAL
-    #  print("Not Clicked")
+  def onclick1(self):
+    #print(self.cbtn1.config()["text"][-1])
+    if self.check1.get():
+      self.var1.set(self.cbtn1.config()["text"][-1])
+    else: self.var1.set("")
+    
+    if self.check1.get() or self.check2.get() or self.check3.get():
+      self.change_all_last6_btn_state()
+    else:
+      self.change_all_last6_btn_state(normal=False)
+      self.reset_counter()
 
-  def on_click4(self): self.counter4.set(self.counter4.get() + 1)
-  def on_click5(self): self.counter5.set(self.counter5.get() + 1)
-  def on_click6(self): self.counter6.set(self.counter6.get() + 1)
-  def on_click7(self): self.counter7.set(self.counter7.get() + 1)
-  def on_click8(self): self.counter8.set(self.counter8.get() + 1)
-  def on_click9(self): self.counter9.set(self.counter9.get() + 1)
+  def onclick2(self):
+    #print(self.cbtn2.config()["text"][-1])
+    if self.check2.get():
+      self.var2.set(self.cbtn2.config()["text"][-1])
+    else: self.var2.set("")
+
+    if self.check1.get() or self.check2.get() or self.check3.get():
+      self.change_all_last6_btn_state()
+    else:
+      self.change_all_last6_btn_state(normal=False)
+      self.reset_counter()
+
+  def onclick3(self):
+    #print(self.cbtn3.config()["text"][-1])
+    if self.check3.get():
+      self.var3.set(self.cbtn3.config()["text"][-1])
+    else: self.var3.set("")
+    
+    if self.check1.get() or self.check2.get() or self.check3.get():
+      self.change_all_last6_btn_state()
+    else:
+      self.change_all_last6_btn_state(normal=False)
+      self.reset_counter()
+
+  def onclick4(self):
+    self.counter4.set(self.counter4.get() + 1)
+    #print(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
+    self.var4.set(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
+
+  def onclick5(self): 
+    self.counter5.set(self.counter5.get() + 1)
+    #print(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
+    self.var5.set(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
+  
+  def onclick6(self):
+    self.counter6.set(self.counter6.get() + 1)
+    #print(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
+    self.var6.set(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
+  
+  def onclick7(self): 
+    self.counter7.set(self.counter7.get() + 1)
+    #print(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
+    self.var7.set(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
+  
+  def onclick8(self): 
+    self.counter8.set(self.counter8.get() + 1)
+    #print(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
+    self.var8.set(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
+
+  def onclick9(self): 
+    self.counter9.set(self.counter9.get() + 1)
+    #print(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
+    self.var9.set(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
 
   def change_btn_state(self, btn, normal=True):
     if normal: btn['state'] = tk.NORMAL
@@ -206,6 +273,14 @@ class PizzaGui(tk.Frame):
     self.change_btn_state(self.cbtn1, normal=normal)
     self.change_btn_state(self.cbtn2, normal=normal)
     self.change_btn_state(self.cbtn3, normal=normal)
+    self.change_btn_state(self.btn4, normal=normal)
+    self.change_btn_state(self.btn5, normal=normal)
+    self.change_btn_state(self.btn6, normal=normal)
+    self.change_btn_state(self.btn7, normal=normal)
+    self.change_btn_state(self.btn8, normal=normal)
+    self.change_btn_state(self.btn9, normal=normal)
+  
+  def change_all_last6_btn_state(self, normal=True):
     self.change_btn_state(self.btn4, normal=normal)
     self.change_btn_state(self.btn5, normal=normal)
     self.change_btn_state(self.btn6, normal=normal)
@@ -224,12 +299,29 @@ class PizzaGui(tk.Frame):
     self.counter8.set(0)
     self.counter9.set(0)
     self.pcount_oven.set(0)
+    self.var1.set("")
+    self.var2.set("")
+    self.var3.set("")
+    self.var4.set("")
+    self.var5.set("")
+    self.var6.set("")
+    self.var7.set("")
+    self.var8.set("")
+    self.var9.set("")
 
   def send_pizza(self):
     if self.check1.get() or self.check2.get() or self.check3.get():
       self.pcount_oven.set(self.pcount_oven.get() + 1)
+      tmp = [x for x in (self.var1.get(), self.var2.get(), self.var3.get(), self.var4.get(), self.var5.get(), 
+                         self.var6.get(), self.var7.get(), self.var8.get(), self.var9.get()) if len(x) > 0]
+      print(tmp)
+      #self.pizza.create()
+      #self.pizza.check()
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info)
+      #self.pizza.is_done()
     else: self.var_status_info.set("Vous n'avez composé aucune pizza")
+
+    self.reset_counter()
   
   def start(self):
     if self.check1.get() or self.check2.get() or self.check3.get():
