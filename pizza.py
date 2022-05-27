@@ -21,6 +21,9 @@ class Pizza:
         self.data['Poulet'].append(v['Poulet'])
 
     return self.data
+
+  def get(self, name):
+    return self.data[name]
   
   def create(self, name=None, base="", ingredients=[]):
     self.name = name
@@ -117,6 +120,8 @@ class PizzaGui(tk.Frame):
     self.var7 = tk.StringVar()
     self.var8 = tk.StringVar()
     self.var9 = tk.StringVar()
+
+    self.can_send = False
 
     self.tmp_pizza = []
 
@@ -225,7 +230,6 @@ class PizzaGui(tk.Frame):
 
     self.show_frame()
     self.countdown()
-    self.change_all_last6_btn_state(normal=False)
     #self.cbtn1.bind("<Button-1>", self.onclick)
     #self.cbtn2.bind("<Button-1>", self.onclick)
 
@@ -233,67 +237,64 @@ class PizzaGui(tk.Frame):
     #print(self.cbtn1.config()["text"][-1])
     if self.check1.get():
       self.var1.set(self.cbtn1.config()["text"][-1])
-    else: self.var1.set("")
-    
-    if self.check1.get() or self.check2.get() or self.check3.get():
-      self.change_all_last6_btn_state()
+      self.can_send = True
     else:
-      self.change_all_last6_btn_state(normal=False)
-      self.reset_counter()
-
+      self.var1.set("")
+      self.can_send = False
+    
   def onclick2(self):
     #print(self.cbtn2.config()["text"][-1])
     if self.check2.get():
       self.var2.set(self.cbtn2.config()["text"][-1])
-    else: self.var2.set("")
-
-    if self.check1.get() or self.check2.get() or self.check3.get():
-      self.change_all_last6_btn_state()
-    else:
-      self.change_all_last6_btn_state(normal=False)
-      self.reset_counter()
+      self.can_send = True
+    else: 
+      self.var2.set("")
+      self.can_send = False
 
   def onclick3(self):
     #print(self.cbtn3.config()["text"][-1])
     if self.check3.get():
       self.var3.set(self.cbtn3.config()["text"][-1])
-    else: self.var3.set("")
-    
-    if self.check1.get() or self.check2.get() or self.check3.get():
-      self.change_all_last6_btn_state()
-    else:
-      self.change_all_last6_btn_state(normal=False)
-      self.reset_counter()
+      self.can_send = True
+    else: 
+      self.var3.set("")
+      self.can_send = False
 
   def onclick4(self):
     self.counter4.set(self.counter4.get() + 1)
     #print(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
     self.var4.set(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
+    self.can_send = True
 
   def onclick5(self): 
     self.counter5.set(self.counter5.get() + 1)
     #print(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
     self.var5.set(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
+    self.can_send = True
   
   def onclick6(self):
     self.counter6.set(self.counter6.get() + 1)
     #print(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
     self.var6.set(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
+    self.can_send = True
   
   def onclick7(self): 
     self.counter7.set(self.counter7.get() + 1)
     #print(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
     self.var7.set(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
+    self.can_send = True
   
   def onclick8(self): 
     self.counter8.set(self.counter8.get() + 1)
     #print(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
     self.var8.set(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
+    self.can_send = True
 
   def onclick9(self): 
     self.counter9.set(self.counter9.get() + 1)
     #print(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
     self.var9.set(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
+    self.can_send = True
 
   def change_btn_state(self, btn, normal=True):
     if normal: btn['state'] = tk.NORMAL
@@ -339,7 +340,7 @@ class PizzaGui(tk.Frame):
     self.var9.set("")
 
   def send_pizza(self):
-    if self.check1.get() or self.check2.get() or self.check3.get():
+    if self.can_send:
       tmp = [x for x in (self.var1.get(), self.var2.get(), self.var3.get(), self.var4.get(), self.var5.get(), 
                          self.var6.get(), self.var7.get(), self.var8.get(), self.var9.get()) if len(x) > 0]
       self.pizza.create(base=tmp[0], ingredients=tmp[1:])
