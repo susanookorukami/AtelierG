@@ -4,10 +4,10 @@ import csv
 import time
 
 class Pizza:
-  def __init__(self, name=None, base="", ingredients=[]):
-    self.name = name
-    self.base = base
-    self.ingredients = ingredients
+  def __init__(self):
+    self.name = None
+    self.base = None
+    self.ingredients = []
     self.state = False
     
   def get_all(self):
@@ -22,17 +22,45 @@ class Pizza:
 
     return self.data
   
-  def create(self):
-    pass
-  
-  def is_done(self):
-    pass
+  def create(self, name=None, base="", ingredients=[]):
+    self.name = name
+    self.base = base
+    self.ingredients = ingredients
 
   def check(self):
     pass
 
+  def __str__(self):
+    return "Base: " + self.base + " | Ingrédients: " + ", ".join(self.ingredients)
+
+class Oven:
+  def __init__(self, timer=30):
+    self.in_oven = []
+    self.timer = timer
+  
+  def get(self):
+    return self.in_oven
+
+  def add(self, p):
+    if len(self.in_oven) > 3: return False
+    self.in_oven.append(p)
+    return True
+
+  def is_empty(self):
+    return True if len(self.in_oven) == 0 else False
+
+  def is_done(self):
+    time.sleep(self.timer//6)
+    return True
+
+  def quantity(self):
+    return len(self.in_oven)
+
+  def clean(self):
+    self.in_oven = []
+
 class PizzaGui(tk.Frame):
-  def __init__(self, parent, game_time_sec=20, bg="white", *args, **kwargs):
+  def __init__(self, parent, game_time_sec=60, bg="white", *args, **kwargs):
     tk.Frame.__init__(self, parent, bg=bg, *args, **kwargs)
     
     self.parent = parent
@@ -40,7 +68,9 @@ class PizzaGui(tk.Frame):
     self.width  = 642 #1252
     self.height = 600
     self.game_time_sec = game_time_sec
+    
     self.pizza = Pizza()
+    self.oven  = Oven()
     
     self.parent.geometry(f'{self.width}x{self.height}')
 
@@ -298,7 +328,6 @@ class PizzaGui(tk.Frame):
     self.counter7.set(0)
     self.counter8.set(0)
     self.counter9.set(0)
-    self.pcount_oven.set(0)
     self.var1.set("")
     self.var2.set("")
     self.var3.set("")
@@ -311,30 +340,29 @@ class PizzaGui(tk.Frame):
 
   def send_pizza(self):
     if self.check1.get() or self.check2.get() or self.check3.get():
-      self.pcount_oven.set(self.pcount_oven.get() + 1)
       tmp = [x for x in (self.var1.get(), self.var2.get(), self.var3.get(), self.var4.get(), self.var5.get(), 
                          self.var6.get(), self.var7.get(), self.var8.get(), self.var9.get()) if len(x) > 0]
-      print(tmp)
-      #self.pizza.create()
+      self.pizza.create(base=tmp[0], ingredients=tmp[1:])
       #self.pizza.check()
+      self.oven.add(self.pizza)
+      print(self.pizza)
+      self.pcount_oven.set(self.oven.quantity())
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info)
-      #self.pizza.is_done()
     else: self.var_status_info.set("Vous n'avez composé aucune pizza")
 
     self.reset_counter()
   
   def start(self):
-    if self.check1.get() or self.check2.get() or self.check3.get():
+    if not self.oven.is_empty():
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info + "0%")
+      self.bar()
     else: self.var_status_info.set("Aucune" + self.info)
     
-    self.change_all_btn_state(normal=False)
-    
-    if self.pcount_oven.get() > 0:
-      self.bar()
+    self.change_all_btn_state(normal=False)     
 
     self.change_all_btn_state()
     self.reset_counter()
+    self.oven.clean()
     self.pbar['value'] = 0
 
   def game_over(self):
@@ -347,31 +375,38 @@ class PizzaGui(tk.Frame):
     self.pbar['value'] = 20
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(20) + "%")
     self.update_idletasks()
-    time.sleep(1)
+    #time.sleep(1)
+    self.oven.is_done()
   
     self.pbar['value'] = 40
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(40) + "%")
     self.update_idletasks()
-    time.sleep(1)
-  
+    #time.sleep(1)
+    self.oven.is_done()
+
     self.pbar['value'] = 50
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(50) + "%")
     self.update_idletasks()
-    time.sleep(1)
+    #time.sleep(1)
+    self.oven.is_done()
   
     self.pbar['value'] = 60
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(60) + "%")
     self.update_idletasks()
-    time.sleep(1)
+    #time.sleep(1)
+    self.oven.is_done()
   
     self.pbar['value'] = 80
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(80) + "%")
     self.update_idletasks()
-    time.sleep(1)
+    #time.sleep(1)
+    self.oven.is_done()
+
     self.pbar['value'] = 100
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info1 + str(100) + "%")
     self.update_idletasks()
-    time.sleep(1)
+    #time.sleep(1)
+    self.oven.is_done()
     self.var_status_info.set(str(self.pcount_oven.get()) + self.info2)
 
   def countdown(self):
