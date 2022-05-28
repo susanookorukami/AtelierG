@@ -8,30 +8,25 @@ class Pizza:
     self.name = None
     self.base = None
     self.ingredients = []
-    self.state = False
-    
-  def get_all(self):
-    self.data = {'Hawaienne': [], 'Rucola': [], 'Poulet': []}
 
-    with open('pizza.csv', 'r') as file:
-      csv_file = csv.DictReader(file)
-      for v in csv_file:
-        self.data['Hawaienne'].append(v['Hawaienne'])
-        self.data['Rucola'].append(v['Rucola'])
-        self.data['Poulet'].append(v['Poulet'])
-
-    return self.data
-
-  def get(self, name):
-    return self.data[name]
-  
   def create(self, name=None, base="", ingredients=[]):
     self.name = name
     self.base = base
     self.ingredients = ingredients
 
-  def check(self):
-    pass
+  def __eq__(self, other):
+    if not isinstance(other, self.__class__):
+      raise TypeError(other, " is not a Pizza type")
+    if other.base == self.base and set(other.ingredients) == set(self.ingredients):
+      return 10
+    elif other.base != self.base and set(other.ingredients) != set(self.ingredients):
+      return -4 + -1 * len((set(other.ingredients)^(set(self.ingredients)))&set(self.ingredients))
+    elif other.base != self.base and set(other.ingredients) == set(self.ingredients):
+      return -4
+    elif other.base == self.base and set(other.ingredients) != set(self.ingredients):
+      return -1 * len((set(other.ingredients)^(set(self.ingredients)))&set(self.ingredients))
+    else:
+      return -10
 
   def __str__(self):
     return "Base: " + self.base + " | Ingrédients: " + ", ".join(self.ingredients)
@@ -105,8 +100,10 @@ class PizzaGui(tk.Frame):
     self.timer = tk.StringVar()
     self.timer.set(f"Timer: {self.time_sec.get()}/{self.game_time_sec}")
 
+    self.count_score = 0
+
     self.score = tk.StringVar()
-    self.score.set("Score: 0")   
+    self.score.set(f"Score: {self.count_score}")
 
     self.var_status_info = tk.StringVar()
     self.var_status_info.set("Aucune" + self.info)
@@ -123,15 +120,31 @@ class PizzaGui(tk.Frame):
 
     self.can_send = False
 
-    self.tmp_pizza = []
+    self.pdict = {'Hawaienne': [], 'Rucola': [], 'Poulet': []}
 
-    self.pizza_dict = self.pizza.get_all()
+    with open('pizza.csv', 'r') as file:
+      csv_file = csv.DictReader(file)
+      for v in csv_file:
+        self.pdict['Hawaienne'].append(v['Hawaienne'])
+        self.pdict['Rucola'].append(v['Rucola'])
+        self.pdict['Poulet'].append(v['Poulet'])
+    
+    # Remove empty strings from a list of strings
+    self.pdict['Hawaienne'] = list(filter(None, self.pdict['Hawaienne']))
+    self.pdict['Rucola'] = list(filter(None, self.pdict['Rucola']))
+    self.pdict['Poulet'] = list(filter(None, self.pdict['Poulet']))
 
-    #print(self.pizza_dict)
+    self.ph = Pizza()
+    self.pr = Pizza()
+    self.pp = Pizza()
 
-    self.mbttn1 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[0], relief=tk.RAISED)
-    self.mbttn2 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[1], relief=tk.RAISED)
-    self.mbttn3 = tk.Menubutton(self, text=list(self.pizza_dict.keys())[2], relief=tk.RAISED)
+    self.ph.create('Hawaienne', self.pdict['Hawaienne'][0], self.pdict['Hawaienne'][1:])
+    self.pr.create('Rucola', self.pdict['Rucola'][0], self.pdict['Rucola'][1:])
+    self.pp.create('Poulet', self.pdict['Poulet'][0], self.pdict['Poulet'][1:])
+    
+    self.mbttn1 = tk.Menubutton(self, text=list(self.pdict.keys())[0], relief=tk.RAISED)
+    self.mbttn2 = tk.Menubutton(self, text=list(self.pdict.keys())[1], relief=tk.RAISED)
+    self.mbttn3 = tk.Menubutton(self, text=list(self.pdict.keys())[2], relief=tk.RAISED)
 
     self.menu1 = tk.Menu(self.mbttn1, tearoff=0)
     self.menu2 = tk.Menu(self.mbttn2, tearoff=0)
@@ -164,32 +177,32 @@ class PizzaGui(tk.Frame):
 
     self.lab_btn4 = tk.Label(self, textvariable=self.counter4,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn4 = tk.Button(self, text="Morceau d'ananas", command=self.onclick4,
+    self.btn4 = tk.Button(self, text="morceaux d'ananas", command=self.onclick4,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn5 = tk.Label(self, textvariable=self.counter5,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn5 = tk.Button(self, text="Morceau de jambon", command=self.onclick5,
+    self.btn5 = tk.Button(self, text="morceaux de jambon", command=self.onclick5,
                                     highlightbackground=self.bg, bg=self.bg)
     
     self.lab_btn6 = tk.Label(self, textvariable=self.counter6,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn6 = tk.Button(self, text="Lamelle de roquette", command=self.onclick6,
+    self.btn6 = tk.Button(self, text="mamelles de roquette", command=self.onclick6,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn7 = tk.Label(self, textvariable=self.counter7,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn7 = tk.Button(self, text="Oignon", command=self.onclick7,
+    self.btn7 = tk.Button(self, text="oignons", command=self.onclick7,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn8 = tk.Label(self, textvariable=self.counter8,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn8 = tk.Button(self, text="Piment vert", command=self.onclick8,
+    self.btn8 = tk.Button(self, text="piment vert", command=self.onclick8,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn9 = tk.Label(self, textvariable=self.counter9,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn9 = tk.Button(self, text="Épinard", command=self.onclick9,
+    self.btn9 = tk.Button(self, text="épinards", command=self.onclick9,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_timer = tk.Label(self, textvariable=self.timer, borderwidth=3,
@@ -343,10 +356,14 @@ class PizzaGui(tk.Frame):
     if self.can_send:
       tmp = [x for x in (self.var1.get(), self.var2.get(), self.var3.get(), self.var4.get(), self.var5.get(), 
                          self.var6.get(), self.var7.get(), self.var8.get(), self.var9.get()) if len(x) > 0]
+      
       self.pizza.create(base=tmp[0], ingredients=tmp[1:])
-      #self.pizza.check()
       self.oven.add(self.pizza)
-      print(self.pizza)
+
+      #self.pizza.get_point()
+      self.count_score += self.pizza == self.ph
+      self.score.set(f"Score: {self.count_score}")
+
       self.pcount_oven.set(self.oven.quantity())
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info)
     else: self.var_status_info.set("Vous n'avez composé aucune pizza")
