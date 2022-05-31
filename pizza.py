@@ -19,14 +19,7 @@ class Pizza:
       raise TypeError(other, " is not a Pizza type")
     if other.base == self.base and set(other.ingredients) == set(self.ingredients):
       return 10
-    elif other.base != self.base and set(other.ingredients) != set(self.ingredients):
-      return -4 + -1 * len((set(other.ingredients)^(set(self.ingredients)))&set(self.ingredients))
-    elif other.base != self.base and set(other.ingredients) == set(self.ingredients):
-      return -4
-    elif other.base == self.base and set(other.ingredients) != set(self.ingredients):
-      return -1 * len((set(other.ingredients)^(set(self.ingredients)))&set(self.ingredients))
-    else:
-      return -10
+    else: return 0
 
   def __str__(self):
     return "Base: " + self.base + " | Ingrédients: " + ", ".join(self.ingredients)
@@ -51,7 +44,7 @@ class Oven:
     time.sleep(self.timer//6)
     return True
 
-  def quantity(self):
+  def quant(self):
     return len(self.in_oven)
 
   def clean(self):
@@ -117,6 +110,26 @@ class PizzaGui(tk.Frame):
     self.var7 = tk.StringVar()
     self.var8 = tk.StringVar()
     self.var9 = tk.StringVar()
+
+    self.quant1 = tk.IntVar()
+    self.quant2 = tk.IntVar()
+    self.quant3 = tk.IntVar()
+    self.quant4 = tk.IntVar()
+    self.quant5 = tk.IntVar()
+    self.quant6 = tk.IntVar()
+    self.quant7 = tk.IntVar()
+    self.quant8 = tk.IntVar()
+    self.quant9 = tk.IntVar()
+
+    self.quant1.set(2)
+    self.quant2.set(2)
+    self.quant3.set(2)
+    self.quant4.set(10)
+    self.quant5.set(10)
+    self.quant6.set(10)
+    self.quant7.set(1)
+    self.quant8.set(1)
+    self.quant9.set(1)
 
     self.can_send = False
 
@@ -250,64 +263,100 @@ class PizzaGui(tk.Frame):
     #print(self.cbtn1.config()["text"][-1])
     if self.check1.get():
       self.var1.set(self.cbtn1.config()["text"][-1])
+      self.quant1.set(self.quant1.get() - 1)
       self.can_send = True
     else:
       self.var1.set("")
       self.can_send = False
+
+    if self.quant1.get() <= 0:
+      self.cbtn1['state'] = tk.DISABLED
     
   def onclick2(self):
     #print(self.cbtn2.config()["text"][-1])
     if self.check2.get():
       self.var2.set(self.cbtn2.config()["text"][-1])
+      self.quant2.set(self.quant2.get() - 1)
       self.can_send = True
     else: 
       self.var2.set("")
       self.can_send = False
 
+    if self.quant2.get() <= 0:
+      self.cbtn2['state'] = tk.DISABLED
+
   def onclick3(self):
     #print(self.cbtn3.config()["text"][-1])
     if self.check3.get():
       self.var3.set(self.cbtn3.config()["text"][-1])
+      self.quant3.set(self.quant3.get() - 1)
       self.can_send = True
     else: 
       self.var3.set("")
       self.can_send = False
 
+    if self.quant3.get() <= 0:
+      self.cbtn3['state'] = tk.DISABLED
+
   def onclick4(self):
     self.counter4.set(self.counter4.get() + 1)
     #print(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
     self.var4.set(str(self.counter4.get()) + ' ' + self.btn4.config()["text"][-1])
+    self.quant4.set(self.quant4.get() - 1)
     self.can_send = True
+
+    if self.quant4.get() <= 0:
+      self.btn4['state'] = tk.DISABLED
 
   def onclick5(self): 
     self.counter5.set(self.counter5.get() + 1)
     #print(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
     self.var5.set(str(self.counter5.get()) + ' ' + self.btn5.config()["text"][-1])
+    self.quant5.set(self.quant5.get() - 1)
     self.can_send = True
+
+    if self.quant5.get() <= 0:
+      self.btn5['state'] = tk.DISABLED
   
   def onclick6(self):
     self.counter6.set(self.counter6.get() + 1)
     #print(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
     self.var6.set(str(self.counter6.get()) + ' ' + self.btn6.config()["text"][-1])
+    self.quant6.set(self.quant6.get() - 1)
     self.can_send = True
+
+    if self.quant6.get() <= 0:
+      self.btn6['state'] = tk.DISABLED
   
   def onclick7(self): 
     self.counter7.set(self.counter7.get() + 1)
     #print(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
     self.var7.set(str(self.counter7.get()) + ' ' + self.btn7.config()["text"][-1])
+    self.quant7.set(self.quant7.get() - 1)
     self.can_send = True
+
+    if self.quant7.get() <= 0:
+      self.btn7['state'] = tk.DISABLED
   
   def onclick8(self): 
     self.counter8.set(self.counter8.get() + 1)
     #print(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
     self.var8.set(str(self.counter8.get()) + ' ' + self.btn8.config()["text"][-1])
+    self.quant8.set(self.quant8.get() - 1)
     self.can_send = True
+
+    if self.quant8.get() <= 0:
+      self.btn8['state'] = tk.DISABLED
 
   def onclick9(self): 
     self.counter9.set(self.counter9.get() + 1)
     #print(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
     self.var9.set(str(self.counter9.get()) + ' ' + self.btn9.config()["text"][-1])
+    self.quant9.set(self.quant9.get() - 1)
     self.can_send = True
+
+    if self.quant9.get() <= 0:
+      self.btn9['state'] = tk.DISABLED
 
   def change_btn_state(self, btn, normal=True):
     if normal: btn['state'] = tk.NORMAL
@@ -360,11 +409,12 @@ class PizzaGui(tk.Frame):
       self.pizza.create(base=tmp[0], ingredients=tmp[1:])
       self.oven.add(self.pizza)
 
-      #self.pizza.get_point()
       self.count_score += self.pizza == self.ph
+      self.count_score += self.pizza == self.pr
+      self.count_score += self.pizza == self.pp
       self.score.set(f"Score: {self.count_score}")
 
-      self.pcount_oven.set(self.oven.quantity())
+      self.pcount_oven.set(self.oven.quant())
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info)
     else: self.var_status_info.set("Vous n'avez composé aucune pizza")
 
@@ -387,7 +437,20 @@ class PizzaGui(tk.Frame):
     self.change_all_btn_state(normal=False)
     self.btn_send_pizza['state'] = tk.DISABLED
     self.btn_start['state'] = tk.DISABLED
-    self.var_status_info.set("Fin du jeu")
+    btotal = self.quant1.get() + self.quant2.get() + self.quant3.get()
+    itotal = self.quant4.get() + self.quant5.get() + self.quant6.get() + \
+             self.quant7.get() + self.quant8.get() + self.quant9.get()
+    self.count_score += self.final_score(btotal, 0)
+    self.count_score += self.final_score(itotal, 1)
+    self.score.set(f"Score: {self.count_score}")
+    self.var_status_info.set(f"Fin du jeu, Score final: {self.count_score}")
+
+  def final_score(self, total, id):
+    if id == 0:
+      return -4 * total 
+    elif id == 1:
+      return -1 * total
+    else: return 0
 
   def bar(self):
     self.pbar['value'] = 20
