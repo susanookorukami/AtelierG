@@ -244,7 +244,7 @@ class PizzaGui(tk.Frame):
                                     height=2, highlightthickness=20, relief="ridge",
                                     highlightbackground=self.bg)
     
-    self.btn_start = tk.Button(self, text="Démarrer",
+    self.btn_start = tk.Button(self, text="Allumer le four",
                                     bg='green', fg='white',
                                     relief=tk.FLAT,
                                     activeforeground='white',
