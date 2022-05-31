@@ -200,7 +200,7 @@ class PizzaGui(tk.Frame):
     
     self.lab_btn6 = tk.Label(self, textvariable=self.counter6,
                                     highlightbackground=self.bg, bg=self.bg)
-    self.btn6 = tk.Button(self, text="mamelles de roquette", command=self.onclick6,
+    self.btn6 = tk.Button(self, text="lamelles de roquette", command=self.onclick6,
                                     highlightbackground=self.bg, bg=self.bg)
 
     self.lab_btn7 = tk.Label(self, textvariable=self.counter7,
