@@ -56,8 +56,8 @@ class PizzaGui(tk.Frame):
     
     self.parent = parent
     self.bg = bg
-    self.width  = 642 #1252
-    self.height = 600
+    self.width  = 1170
+    self.height = 800
     self.game_time_sec = game_time_sec
     
     self.pizza = Pizza()
@@ -121,15 +121,15 @@ class PizzaGui(tk.Frame):
     self.quant8 = tk.IntVar()
     self.quant9 = tk.IntVar()
 
-    self.quant1.set(2)
-    self.quant2.set(2)
-    self.quant3.set(2)
-    self.quant4.set(10)
-    self.quant5.set(10)
-    self.quant6.set(10)
-    self.quant7.set(1)
-    self.quant8.set(1)
-    self.quant9.set(1)
+    self.quant1.set(6)
+    self.quant2.set(6)
+    self.quant3.set(6)
+    self.quant4.set(30)
+    self.quant5.set(30)
+    self.quant6.set(35)
+    self.quant7.set(20)
+    self.quant8.set(20)
+    self.quant9.set(20)
 
     self.can_send = False
 
