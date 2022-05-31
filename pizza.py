@@ -416,7 +416,12 @@ class PizzaGui(tk.Frame):
 
       self.pcount_oven.set(self.oven.quant())
       self.var_status_info.set(str(self.pcount_oven.get()) + self.info)
+
     else: self.var_status_info.set("Vous n'avez composé aucune pizza")
+
+    if self.pcount_oven.get() == 3:
+      self.btn_send_pizza['state'] = tk.DISABLED
+    else: self.btn_send_pizza['state'] = tk.NORMAL
 
     self.reset_counter()
   
